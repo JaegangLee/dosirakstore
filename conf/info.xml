@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="0.2">
+	<title xml:lang="ko">도시락 업체 조회</title>
+	<title xml:lang="en"> Dosirakstore System</title>
+
+	<description xml:lang="ko">도시락 업체를 조회하기 위한 모듈입니다.</description>
+	<description xml:lang="en">In charge of function of the Dosirakstore. </description>
+	<version>0.2</version>
+	<date>2015-10-01</date>
+	<category>Service</category>
+
+	<author email_address="leegomo@colcomm.com" link="http://dosirakempire.com/">
+		<name xml:lang="ko">이재강</name>
+		<name xml:lang="en">Jaegang Lee</name>
+	</author>
+</module>

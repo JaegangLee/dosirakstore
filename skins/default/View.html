@@ -1,0 +1,177 @@
+<include target="_head.html" />
+
+
+<div id="wrapper"> 
+	<script type="text/javascript" src="http://openapi.map.naver.com/openapi/naverMap.naver?ver=2.0&key=820605ccbf29a94790b8a321040e4ca8"></script>
+	<div id="map"></div>
+	<script type="text/javascript">
+		//map size 계산하기
+		var mapWidth = window.innerWidth
+		|| document.documentElement.clientWidth
+		|| document.body.clientWidth;
+
+		var mapHeight = window.innerHeight
+		|| document.documentElement.clientHeight
+		|| document.body.clientHeight;
+		
+		var mwidth = Math.round(mapWidth * 0.95);
+		var mheight = Math.round(mapHeight * 0.5);
+		
+		var oMarkerParam1 = new Array();
+		var oMarkerParam2 = new Array();
+		var oMarkerParam3 = new Array();
+		<!--@foreach($oDosirakstore as $no => $store)-->
+		var Point = new nhn.api.map.TM128({$store->mapx}, {$store->mapy});
+		<!--@end-->
+		var defaultLevel = 11;
+		var oMap = new nhn.api.map.Map(document.getElementById('map'), {
+			point : Point,
+			zoom : defaultLevel,
+			enableWheelZoom : true,
+			enableDragPan : true,
+			enableDblClickZoom : false, 
+			mapMode : 0,
+			activateTrafficMap : false, 
+			activateBicycleMap : false,
+			minMaxLevel : [ 1, 14 ],
+			size : new nhn.api.map.Size(mwidth, mheight)
+		});
+		//줌 슬라이더 조작계
+		var oSlider = new nhn.api.map.ZoomControl();
+		oMap.addControl(oSlider);
+		oSlider.setPosition({
+			top : 10,
+			left : 10
+		});
+
+		var oSize = new nhn.api.map.Size(28, 37);
+		var oOffset = new nhn.api.map.Size(14, 37);
+		var oIconOn = new nhn.api.map.Icon('http://static.naver.com/maps2/icons/pin_spot2.png', oSize, oOffset);
+		
+			 var infoWindow = new nhn.api.map.InfoWindow(); // - info window 생성
+			infoWindow.setPosition({
+					top : 20,
+					left :20
+				});
+			<!--@foreach($oDosirakstore as $no => $store)-->
+			 var oPoint = new nhn.api.map.TM128({$store->mapx}, {$store->mapy});
+			 var oMarker = new nhn.api.map.Marker(oIconOn, {
+				title : '{$store->title}',
+				  zIndex : {$no}
+			 });
+			 //변수전달 방법, 배열사용
+			 oMarkerParam1[{$no}] = '{$store->title}';
+			 oMarkerParam2[{$no}] = '{$store->telephone}';
+			 oMarkerParam3[{$no}] = '{$store->address}';
+			 oMarker.setPoint(oPoint);
+			 oMap.addOverlay(oMarker);
+			 //첫 마커의 설명창만 보이게 설정 
+			 infoWindow.setContent('<DIV style="border-top:1px solid; border-bottom:2px groove black; border-left:1px solid; border-right:2px groove black;margin-bottom:1px;color:black;background-color:white; width:auto; height:auto;">'
+				+'<span style="color: #000000 !important;display: inline-block;font-size: 12px !important;font-weight: bold !important;letter-spacing: -1px !important;white-space: nowrap !important; padding: 2px 5px 2px 2px !important">' 
+				+oMarkerParam1[{$no}]
+				+'<br /> ' 
+				+ oMarkerParam2[{$no}]
+				+'<br /> ' 
+				+ oMarkerParam3[{$no}]
+				+'<span></div>');
+			 infoWindow.setPoint(oMarker.getPoint());
+			 infoWindow.setVisible(true);
+			 infoWindow.setPosition({right : 5, top : 20}); 
+			 infoWindow.autoPosition();
+			<!--@end--> 
+
+			//깃발에 마우스 올리면 설명 나오게 하는 부분
+		var oLabel = new nhn.api.map.MarkerLabel(); // - 마커 라벨 선언.
+		oMap.addOverlay(oLabel); // - 마커 라벨 지도에 추가. 기본은 라벨이 보이지 않는 상태로 추가됨.
+		oMap.addOverlay(infoWindow); // - 마커 라벨 지도에 추가. 기본은 라벨이 보이지 않는 상태로 추가됨.
+		oMap.attach('mouseenter', function(oCustomEvent) {
+
+			var oTarget = oCustomEvent.target;
+			// 마커위에 마우스 올라간거면
+			if (oTarget instanceof nhn.api.map.Marker) {
+				var oMarker = oTarget;
+				oLabel.setVisible(true, oMarker); // - 특정 마커를 지정하여 해당 마커의 title을 보여준다.
+			}
+		});
+
+		oMap.attach('mouseleave', function(oCustomEvent) {
+
+			var oTarget = oCustomEvent.target;
+			// 마커위에서 마우스 나간거면
+			if (oTarget instanceof nhn.api.map.Marker) {
+				oLabel.setVisible(false);
+			}
+		});
+		
+		 oMap.attach('click', function(oCustomEvent) {
+			  var oTarget = oCustomEvent.target;
+				infoWindow.setVisible(false);
+
+			  // 마커 클릭하면
+			  if (oTarget instanceof nhn.api.map.Marker) {
+					 var oMarkerId = oCustomEvent.target.getZIndex();
+					 oLabel.setVisible(false);
+				   oTarget.setIcon(oIconOn);
+					//oMap.setCenter(oMarker.getPoint());
+					infoWindow.setContent('<DIV style="border-top:1px solid; border-bottom:2px groove black; border-left:1px solid; border-right:2px groove black;margin-bottom:1px;color:black;background-color:white; width:auto; height:auto;">'
+					+'<span style="color: #000000 !important;display: inline-block;font-size: 12px !important;font-weight: bold !important;letter-spacing: -1px !important;white-space: nowrap !important; padding: 2px 5px 2px 2px !important">' 
+					+oMarkerParam1[oMarkerId]
+					+'<br /> ' 
+					+ oMarkerParam2[oMarkerId]
+					+'<br /> ' 
+					+ oMarkerParam3[oMarkerId]
+					+'<span></div>'
+					);
+					infoWindow.setPoint(oTarget.getPoint());
+					infoWindow.setPosition({right : 5, top : 20});
+					infoWindow.setVisible(true);
+
+				 //  infoWindow.autoPosition();
+				   return;
+			  }
+		 });
+
+		window.onresize=function(){
+			var mapRWidth = window.innerWidth
+			|| document.documentElement.clientWidth
+			|| document.body.clientWidth;
+
+			var mapRHeight = window.innerHeight
+			|| document.documentElement.clientHeight
+			|| document.body.clientHeight;
+			
+			var rwidth = Math.round(mapRWidth * 0.95);
+			var rheight = Math.round(mapRHeight * 0.5);
+			
+			oMap.setSize(new nhn.api.map.Size(rwidth, rheight));
+		};
+	</script>
+</div>
+<block cond="$oDosirakstore" loop="$oDosirakstore => $no, $store">
+	<div class="view_body">
+		<span class = "title">
+			{$lang->title}: {$store->title}
+		</span>
+		<span class = "link">
+			{$lang->link}:{htmlspecialchars($store->link)}
+		</span>
+		<span class = "telephone">
+			{$lang->telephone}:{$store->telephone}
+		</span>
+		<span class = "address">
+			{$lang->address}:{$store->address}
+		</span>
+		<span class = "mapx">
+			{$lang->mapx}:{$store->mapx}
+		</span>
+		<span class = "mapy">
+			{$lang->mapy}:{$store->mapy}
+		</span>
+	</div>
+</block>
+<br /> 
+<div class="buttonbar">
+	<a cond="$grant->manager" class="btn" href="{getUrl('act','dispDosirakstoreWrite','no',$store->no)}">{$lang->cmd_modify}</a>&nbsp;
+	<a cond="$grant->manager" class="btn" href="{getUrl('act','dispDosirakstoreDelete','no',$store->no,'comment_srl','')}">{$lang->cmd_delete}</a>&nbsp;
+	<a class="btn" href="{getUrl('no', '')}">{$lang->cmd_list}</a>
+</div>

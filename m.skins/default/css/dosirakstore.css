@@ -1,0 +1,49 @@
+@charset "utf-8";/* Å×Åä (leegomo@dosirakempire.com) */
+
+#map {width:95% !important;max-width:940px;text-align:center;}
+.nmap {width:95% !important;max-width:940px;}
+
+.dosirakList{font-size:12px;font-family:µ¸¿ò, Dotum, Tahoma, Geneva, sans-serif}
+
+.dosirakList{background:url(bgHeader.gif) no-repeat 0 -100px;text-align:center;}
+.dosirakList table{border:0;border-bottom:1px solid #cdcdcd;color:#4a4a4a;background:url(bgHeader.gif) no-repeat right -100px}
+.dosirakList a{text-decoration:none;color:#4a4a4a}
+.dosirakList a:hover,
+.dosirakList a:active,
+.dosirakList a:focus{text-decoration:underline}
+.dosirakList th{border:0;padding:8px 0 9px 0;height:14px;white-space:nowrap}
+.dosirakList th:first-child span{border:0}
+.dosirakList th span{display:block;border-left:1px solid #c7c7c7;padding:0 15px;height:14px}
+.dosirakList tr.notice{background:#f6f6f6}
+.dosirakList tr.notice td.title a{font-weight:bold}
+.dosirakList td{border:0;border-bottom:1px solid #e6e6e6;padding:8px 10px;white-space:nowrap;vertical-align:top}
+.dosirakList tr:last-child td{border:0}
+.dosirakList td.notice{text-align:center}
+.dosirakList td.no{text-align:center;font:11px Tahoma, Geneva, sans-serif}
+.dosirakList td.title{white-space:normal;line-height:1.4}
+.dosirakList td.author img{position:relative;top:-1px}
+.dosirakList td.time,
+.dosirakList td.readNum,
+.dosirakList td.voteNum,
+.dosirakList td.lastReply a{text-align:center;font:11px Tahoma, Geneva, sans-serif}
+.dosirakList td.lastReply sub{font:9px Tahoma, Geneva, sans-serif}
+.dosirakList td.check{text-align:center}
+.dosirakList td.txCenter{text-align:center}
+
+ 
+.pagenavi{margin:0;padding:4px 0 10px 0;text-align:center;line-height:normal}
+.pagenavi a,
+.pagenavi strong{position:relative;color:#767676;font:bold 12px/16px Tahoma, Sans-serif;vertical-align:top;display:inline-block;text-decoration:none;padding:1px 8px;margin:0 -3px;border-left:1px solid #ccc;border-right:1px solid #ccc;background-color:#fff;z-index:2}
+.pagenavi a:hover,
+.pagenavi a:active,
+.pagenavi a:focus{background-color:#f8f8f8}
+.pagenavi strong{color:#f60;font-size:18px}
+.pagenavi .direction{font-weight:normal;color:#767676;text-decoration:none !important;border:0;z-index:1}
+.pagenavi .direction:hover,
+.pagenavi .direction:active,
+.pagenavi .direction:focus{color:#333;background-color:#fff}
+.pagenavi .prev{border-left:0}
+.pagenavi .next{border-right:0}
+.pagenavi .direction span{position:relative;display:inline-block;width:0;height:0;font-size:0;line-height:0;vertical-align:top;top:4px}
+.pagenavi .prev span{border:3px solid;border-top:solid #fff;border-bottom:solid #fff;border-left:0;margin-right:1px;*left:-4px}
+.pagenavi .next span{border:3px solid;border-top:solid #fff;border-bottom:solid #fff;border-right:0;margin-left:1px}

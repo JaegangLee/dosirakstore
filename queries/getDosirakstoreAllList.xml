@@ -1,0 +1,16 @@
+<query id="getDosirakstoreAllList" action="select">
+    <tables>
+        <table name="dosirak_store" />
+    </tables>
+    <columns>
+        <column name="*" />
+    </columns>
+	    <conditions>
+    </conditions>
+    <navigation>
+        <index var="title" default="title" order="asc" />
+        <list_count var="list_count" default="20" />
+        <page_count var="page_count" default="1" />
+        <page var="page" default="1" />
+    </navigation>
+</query>

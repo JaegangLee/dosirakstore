@@ -1,0 +1,13 @@
+<query id="insertDosirakstoreOne" action="insert">
+	<tables>
+		<table name="dosirak_store" />
+	</tables>
+	<columns>
+    	    <column name="title" var="title" notnull="notnull" minlength="1" maxlength="250" />    	    
+		<column name="link" var="link" maxlength="300" />
+		<column name="telephone" var="telephone" notnull="notnull" minlength="1" maxlength="50" />
+		<column name="address" var="address" notnull="notnull" minlength="1" maxlength="250" />
+		<column name="mapx" var="mapx" notnull="notnull" filter="number" default="0" />
+		<column name="mapy" var="mapy" notnull="notnull" filter="number" default="0" />
+	</columns>
+</query>

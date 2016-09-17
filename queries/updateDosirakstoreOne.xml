@@ -1,0 +1,16 @@
+<query id="updateDosirakstoreOne" action="update">
+    <tables>
+        <table name="dosirak_store" />
+    </tables>
+    <columns>
+        <column name="title" var="title" notnull="notnull" minlength="1" maxlength="100" />
+		<column name="link" var="link" maxlength="300" default="" />
+		<column name="telephone" var="telephone" notnull="notnull" minlength="1" maxlength="50" />
+		<column name="address" var="address" notnull="notnull" minlength="1" maxlength="250" />
+		<column name="mapx" var="mapx" notnull="notnull" filter="number" default="0" />
+		<column name="mapy" var="mapy" notnull="notnull" filter="number" default="0" />
+    </columns>
+    <conditions>
+        <condition operation="equal" column="no" var="no" filter="number" notnull="notnull" />
+    </conditions>	
+</query>

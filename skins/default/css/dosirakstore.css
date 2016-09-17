@@ -1,0 +1,121 @@
+@charset "utf-8";/* 테토 (leegomo@dosirakempire.com) */
+/*Naver Map Setting*/
+body { text-align:center; } /* IE 에서 가운데정렬을 하기 위한 코드 */
+#wrapper {width:100%;   text-align:center;  }
+#map {margin:0 auto;text-align:center;}
+.nmap {width:100% !important;}
+#total_count{width:95%;text-align:left;margin:0 auto;white-space:normal;line-height:1.4}
+/*List for Search*/
+.parent_search2
+{
+	overflow: hidden;
+  width:150px; // for example
+}
+select {
+ margin-top:5px;
+  width: 170px; /* 원하는 너비설정 */ 
+  padding: .8em .5em; /* 여백으로 높이 설정 */
+  font-family: inherit;  /* 폰트 상속 */
+  background: url(https://farm1.staticflickr.com/379/19928272501_4ef877c265_t.jpg) no-repeat 97% 50%; /* 네이티브 화살표 대체 */  
+  border: 1px solid #999; 
+  border-radius: 0px; /* iOS 둥근모서리 제거 */
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none;
+  appearance: none;
+} 
+select option{ 	font-size:14px;}
+select::-ms-expand {   display: none;}
+
+/*List*/
+.dosirakList{font-size:12px;font-family:돋움, Dotum, Tahoma, Geneva, sans-serif}
+.dosirakList{width:95%; margin:0 auto;background:url(bgHeader.gif) no-repeat 0 -100px;}
+.dosirakList table{border:0;border-bottom:1px solid #cdcdcd;color:#4a4a4a;background:url(bgHeader.gif) no-repeat right -100px}
+.dosirakList a{text-decoration:none;color:#4a4a4a}
+.dosirakList a:hover,
+.dosirakList a:active,
+.dosirakList a:focus{text-decoration:underline}
+.dosirakList th{border:0;padding:8px 0 9px 0;height:14px;white-space:nowrap}
+.dosirakList th:first-child span{border:0}
+.dosirakList th span{display:block;border-left:1px solid #c7c7c7;padding:0 15px;height:14px}
+.dosirakList tr.notice{background:#f6f6f6}
+.dosirakList tr.notice td.title a{font-weight:bold}
+.dosirakList th.telephone:after{content:"번호"}
+.dosirakList td{border:0;border-bottom:1px solid #e6e6e6;padding:8px 10px;white-space:nowrap;vertical-align:middle}
+.dosirakList tr:last-child td{border:0}
+
+.dosirakList tr:hover,
+.dosirakList tr:active,
+.dosirakList tr:focus{background-color:#eee}
+
+.dosirakList tr.selected{ 
+background-color: #333; 
+}
+.dosirakList td.notice{text-align:center}
+.dosirakList td.no{text-align:center;font:11px Tahoma, Geneva, sans-serif}
+.dosirakList td.title, td.address{white-space:normal;line-height:1.4}
+.dosirakList td.telephone{text-align:center;white-space:normal;line-height:1.4}
+.dosirakList td.telephone li{list-style-type: none}
+.dosirakList td.telephone img{position:relative;vertical-align:middle;display:none;}
+.dosirakList td.lastReply sub{font:9px Tahoma, Geneva, sans-serif}
+.dosirakList td.check{text-align:center}
+.dosirakList td.txCenter{text-align:center}
+
+.pagenavi{margin:0;padding:4px 0 10px 0;text-align:center;line-height:normal}
+.pagenavi a,
+.pagenavi strong{position:relative;color:#767676;font:bold 12px/16px Tahoma, Sans-serif;vertical-align:top;display:inline-block;text-decoration:none;padding:1px 8px;margin:0 -3px;border-left:1px solid #ccc;border-right:1px solid #ccc;background-color:#fff;z-index:2}
+.pagenavi a:hover,
+.pagenavi a:active,
+.pagenavi a:focus{background-color:#f8f8f8}
+.pagenavi strong{color:#f60;font-size:18px}
+.pagenavi .direction{font-weight:normal;color:#767676;text-decoration:none !important;border:0;z-index:1}
+.pagenavi .direction:hover,
+.pagenavi .direction:active,
+.pagenavi .direction:focus{color:#333;background-color:#fff}
+.pagenavi .prev{border-left:0}
+.pagenavi .next{border-right:0}
+.pagenavi .direction span{position:relative;display:inline-block;width:0;height:0;font-size:0;line-height:0;vertical-align:top;top:4px}
+.pagenavi .prev span{border:3px solid;border-top:solid #fff;border-bottom:solid #fff;border-left:0;margin-right:1px;*left:-4px}
+.pagenavi .next span{border:3px solid;border-top:solid #fff;border-bottom:solid #fff;border-right:0;margin-left:1px}
+
+/*View*/
+.view_body span{display:block;font-size:14px;}
+
+/*Write*/
+.write_body span{display:block;font-size:14px}
+
+
+/*All button*/
+.buttonbar {display:block;}
+
+/*Adoptive Design*/
+@media screen and (min-width: 0px) and (max-width: 412px) {
+/*.dosirakList td.telephone a{font-size:0px;}
+.dosirakList td.telephone:before{background-image:url(icon_phones.gif);white-space:normal;line-height:1.4; display:block;} 
+*/
+select {
+  width: 44.5%; /* 원하는 너비설정 */ 
+  padding: .8em .5em; /* 여백으로 높이 설정 */
+  font-family: inherit;  /* 폰트 상속 */
+  background: url(https://farm1.staticflickr.com/379/19928272501_4ef877c265_t.jpg) no-repeat 95% 50%; /* 네이티브 화살표 대체 */  
+  border: 1px solid #999; 
+  border-radius: 0px; /* iOS 둥근모서리 제거 */
+  -webkit-appearance: none; /* 네이티브 외형 감추기 */
+  -moz-appearance: none;
+  appearance: none;
+}
+select::-ms-expand { 
+  display: none;
+}
+
+.dosirakList td{font-size:11px !important;font-family:돋움, Dotum, Tahoma, Geneva, sans-serif}
+.dosirakList th.telephone:after{content:none;}
+.dosirakList td.no{text-align:center;font:11px Tahoma, Geneva, sans-serif}
+.dosirakList td.title, td.address{white-space:normal;line-height:1.2}
+.dosirakList td.telephone{text-align:center;white-space:normal;line-height:1.2}
+.dosirakList td.telephone a{font-size:0px;}
+.dosirakList td.telephone img{position:relative;vertical-align:middle;display:inline;}
+
+}
+@media screen and (min-width: 413px){
+	 
+}

@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<lang>
+	<item name="dosirakstore_title">
+		<value xml:lang="ko"><![CDATA[중계명]]></value>
+	</item>
+	<item name="about_dosirakstore_title">
+		<value xml:lang="ko"><![CDATA[중계화면 상단에 표시할 제목입니다.]]></value>
+	</item>
+	<item name="no">
+		<value xml:lang="ko"><![CDATA[링크]]></value>
+	</item>
+	<item name="link">
+		<value xml:lang="ko"><![CDATA[링크]]></value>
+	</item>
+	<item name="telephone">
+		<value xml:lang="ko"><![CDATA[전화번호]]></value>
+	</item>
+	<item name="address">
+		<value xml:lang="ko"><![CDATA[주소]]></value>
+	</item>
+	<item name="mapx">
+		<value xml:lang="ko"><![CDATA[X좌표]]></value>
+	</item>
+	<item name="mapy">
+		<value xml:lang="ko"><![CDATA[Y좌표]]></value>
+	</item>	
+</lang>

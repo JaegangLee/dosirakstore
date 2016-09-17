@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<skin version="0.1">
+	<title xml:lang="ko">도시락 업체정보 스킨</title>
+	<description xml:lang="ko">도시락 업체정보 기본 스킨입니다.</description>
+	<date>2015-08-19</date>
+	<link>http://dosirakempire.com</link>
+	<license link="http://licence.com">FREE</licence>
+	<version>1.0</version>
+	<author email_address="leegomo@colcomm.com" link="http://dosirakempire.com">
+		<name xml:lang="ko">테토</name>
+	</author>
+	<extra_vars />
+</skin>

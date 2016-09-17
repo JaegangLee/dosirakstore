@@ -1,0 +1,389 @@
+<include target="_head.html" />
+<block cond="$grant->manager">
+<load target="./js/jquery-1.7.1.min.js" />
+	<div id="wrapper"> 
+		<script type="text/javascript" src="http://openapi.map.naver.com/openapi/naverMap.naver?ver=2.0&key=820605ccbf29a94790b8a321040e4ca8"></script>
+		<div id="map"></div>
+		<script type="text/javascript">
+			//map size 계산하기
+			var mapWidth = window.innerWidth
+			|| document.documentElement.clientWidth
+			|| document.body.clientWidth;
+
+			var mapHeight = window.innerHeight
+			|| document.documentElement.clientHeight
+			|| document.body.clientHeight;
+			
+			var mwidth = Math.round(mapWidth * 0.95);
+			var mheight = Math.round(mapHeight * 0.5);
+			
+			var oMarkerParam1 = new Array();
+			var oMarkerParam2 = new Array();
+			var oMarkerParam3 = new Array();
+			var aIndex = 0;
+			var oSeoulCityPoint = new nhn.api.map.LatLng(37.5675451, 126.9773356);
+
+			var defaultLevel = 11;
+			var oMap = new nhn.api.map.Map(document.getElementById('map'), {
+				point : oSeoulCityPoint,
+				zoom : defaultLevel,
+				enableWheelZoom : true,
+				enableDragPan : true,
+				enableDblClickZoom : false, 
+				mapMode : 0,
+				activateTrafficMap : false, 
+				activateBicycleMap : false,
+				minMaxLevel : [ 1, 14 ],
+				size : new nhn.api.map.Size(mwidth, mheight)
+			});
+			//줌 슬라이더 조작계
+			var oSlider = new nhn.api.map.ZoomControl();
+			oMap.addControl(oSlider);
+			oSlider.setPosition({
+				top : 10,
+				left : 10
+			});
+
+			var oSize = new nhn.api.map.Size(28, 37);
+			var oOffset = new nhn.api.map.Size(14, 37);
+			var oIconOn = new nhn.api.map.Icon('http://static.naver.com/maps2/icons/pin_spot2.png', oSize, oOffset);
+			
+			 var infoWindow = new nhn.api.map.InfoWindow(); // - info window 생성
+			infoWindow.setPosition({
+					top : 20,
+					left :20
+				});
+			/*		마커 확인용 함수 */
+			function show_marker(info_arr, map_arr){
+				 var oPoint = new nhn.api.map.TM128(map_arr[0], map_arr[1]);
+				 var oMarker = new nhn.api.map.Marker(oIconOn, {
+					title : info_arr[0],
+					  zIndex : aIndex
+				 });
+				 //변수전달 방법, 배열사용
+				oMap.setCenter(oPoint);
+				 oMarkerParam1[aIndex] = info_arr[0];
+				 oMarkerParam2[aIndex] = info_arr[1];
+				 oMarkerParam3[aIndex] = info_arr[2];
+				 oMarker.setPoint(oPoint);
+				 oMap.addOverlay(oMarker);
+				 //첫 마커의 설명창만 보이게 설정 
+				 infoWindow.setContent('<DIV style="border-top:1px solid; border-bottom:2px groove black; border-left:1px solid; border-right:2px groove black;margin-bottom:1px;color:black;background-color:white; width:auto; height:auto;">'
+					+'<span style="color: #000000 !important;display: inline-block;font-size: 12px !important;font-weight: bold !important;letter-spacing: -1px !important;white-space: nowrap !important; padding: 2px 5px 2px 2px !important">' 
+					+oMarkerParam1[aIndex]
+					+'<br /> ' 
+					+ oMarkerParam2[aIndex]
+					+'<br /> ' 
+					+ oMarkerParam3[aIndex]
+					+'<span></div>');
+				 infoWindow.setPoint(oMarker.getPoint());
+				 infoWindow.setVisible(true);
+				 infoWindow.setPosition({right : 5, top : 20}); 
+				 infoWindow.autoPosition();
+				 
+				 aIndex++;
+			}
+				//깃발에 마우스 올리면 설명 나오게 하는 부분
+			var oLabel = new nhn.api.map.MarkerLabel(); // - 마커 라벨 선언.
+			oMap.addOverlay(oLabel); // - 마커 라벨 지도에 추가. 기본은 라벨이 보이지 않는 상태로 추가됨.
+			oMap.addOverlay(infoWindow); // - 마커 라벨 지도에 추가. 기본은 라벨이 보이지 않는 상태로 추가됨.
+			oMap.attach('mouseenter', function(oCustomEvent) {
+
+				var oTarget = oCustomEvent.target;
+				// 마커위에 마우스 올라간거면
+				if (oTarget instanceof nhn.api.map.Marker) {
+					var oMarker = oTarget;
+					oLabel.setVisible(true, oMarker); // - 특정 마커를 지정하여 해당 마커의 title을 보여준다.
+				}
+			});
+
+			oMap.attach('mouseleave', function(oCustomEvent) {
+
+				var oTarget = oCustomEvent.target;
+				// 마커위에서 마우스 나간거면
+				if (oTarget instanceof nhn.api.map.Marker) {
+					oLabel.setVisible(false);
+				}
+			});
+			
+			 oMap.attach('click', function(oCustomEvent) {
+				  var oTarget = oCustomEvent.target;
+					infoWindow.setVisible(false);
+
+				  // 마커 클릭하면
+				  if (oTarget instanceof nhn.api.map.Marker) {
+						 var oMarkerId = oCustomEvent.target.getZIndex();
+						 oLabel.setVisible(false);
+					   oTarget.setIcon(oIconOn);
+						//oMap.setCenter(oMarker.getPoint());
+						infoWindow.setContent('<DIV style="border-top:1px solid; border-bottom:2px groove black; border-left:1px solid; border-right:2px groove black;margin-bottom:1px;color:black;background-color:white; width:auto; height:auto;">'
+						+'<span style="color: #000000 !important;display: inline-block;font-size: 12px !important;font-weight: bold !important;letter-spacing: -1px !important;white-space: nowrap !important; padding: 2px 5px 2px 2px !important">' 
+						+oMarkerParam1[oMarkerId]
+						+'<br /> ' 
+						+ oMarkerParam2[oMarkerId]
+						+'<br /> ' 
+						+ oMarkerParam3[oMarkerId]
+						+'<span></div>'
+						);
+						infoWindow.setPoint(oTarget.getPoint());
+						infoWindow.setPosition({right : 5, top : 20});
+						infoWindow.setVisible(true);
+
+					 //  infoWindow.autoPosition();
+					   return;
+				  }
+			 });
+
+			window.onresize=function(){
+				var mapRWidth = window.innerWidth
+				|| document.documentElement.clientWidth
+				|| document.body.clientWidth;
+
+				var mapRHeight = window.innerHeight
+				|| document.documentElement.clientHeight
+				|| document.body.clientHeight;
+				
+				var rwidth = Math.round(mapRWidth * 0.95);
+				var rheight = Math.round(mapRHeight * 0.5);
+				
+				oMap.setSize(new nhn.api.map.Size(rwidth, rheight));
+			};
+		</script>
+		 <script src="http://rawgit.com/douglascrockford/JSON-js/master/json2.js"></script>
+			<script>
+				/*function login(){
+					var search_addr = document.getElementById('search_addr').value;
+					var xmlhttp;
+					if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+						xmlhttp = new XMLHttpRequest();
+					} else {// code for IE6, IE5
+						xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+					}
+					xmlhttp.onreadystatechange = function() {
+						if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+						var resp = JSON.parse(xmlhttp.responseText);
+						//error 검출
+						var str = '<ul>';
+						for(total in resp){
+							if(total == "error"){
+								str += 'error : '+ resp[total];
+							}
+							else{
+								var indata = JSON.parse(resp[total]);
+								for(spot in indata){
+									if(spot=="items"){
+										var arritems = indata[spot];
+										var items = arritems.pop();
+										var entity = JSON.parse(items);
+										for(row in entity){
+											if(row=="point"){
+												var json_xy = entity[row];
+												var xy = JSON.parse(json_xy);
+												for(map in xy){
+													if(map=="x"){
+														var x=xy[map];
+														str += 'x :'+x;
+													}
+													if(map=="y"){
+														var y=xy[map];
+														str += 'y :'+y;
+													}
+												}
+											}
+												
+										}
+									}
+								}
+							}
+						}
+						document.getElementById("list").innerHTML = str;
+						}
+						
+					}
+					xmlhttp.open("GET", 'http://openapi.map.naver.com/api/geocode?key=820605ccbf29a94790b8a321040e4ca8&encoding=utf-8&coord=tm128&output=json&query='+search_addr, true);
+					xmlhttp.send();
+					return false;
+				}
+				
+				function find()
+				{
+				    var j = document.createElement('script');
+				    var s = encodeURIComponent(document.getElementById('search_addr').value);
+				    var u = 'http://openapi.map.naver.com/api/geocode?key=820605ccbf29a94790b8a321040e4ca8&encoding=utf-8&coord=tm128&output=json&callback=loadList&query='+s;
+				  
+				    j.setAttribute('src', u);
+				    j.setAttribute('type', 'text/javascript');
+				    document.getElementsByTagName('body')[0].appendChild(j);
+				 
+				    return false;
+				}
+				function loadList(arr)
+				{
+					
+					var resp = JSON.parse(arr);
+					console.log(resp);
+					for(total in resp){
+						if(total != "result"){
+							str += 'error : '+ resp[total];
+						}
+						else{
+							var indata = JSON.parse(resp[total]);
+							for(spot in indata){
+								if(spot=="items"){
+									var arritems = indata[spot];
+									var items = arritems.pop();
+									var entity = JSON.parse(items);
+									for(row in entity){
+										if(row=="point"){
+											var json_xy = entity[row];
+											var xy = JSON.parse(json_xy);
+											for(map in xy){
+												if(map=="x"){
+													var x=xy[map];
+													str += 'x :'+x;
+												}
+												if(map=="y"){
+													var y=xy[map];
+													str += 'y :'+y;
+												}
+											}
+										}
+											
+									}
+								}
+							}
+						}
+					}
+					document.getElementById("list").innerHTML = str;
+
+				}*/
+				
+				
+				
+			</script> 
+			<script type="text/javascript">
+        $(document).ready(function(){
+            // 이미지 검색 할래염 버튼
+            $("#searchBtn").click(function(){
+                // 기존 검색결과랑 조건 지우기
+                $("#list").empty();
+              
+                 
+                searchImg();
+            });
+
+             
+            var searchImg = function(){
+                $.ajax({
+                    url : "http://openapi.map.naver.com/api/geocode",
+                    dataType : "jsonp",
+                    type : "post",
+                    jsonp : "callback",
+                    data : {
+                        key : "820605ccbf29a94790b8a321040e4ca8",               // API KEY
+                        query : $("#search_addr").val(),         // 검색어
+                        encoding : "utf-8",                   // 인코딩
+                        coord : "tm128",     // 좌표계
+                        output : "json"                  // JSONP 형식으로 호출하기 때문에 결과값 포맷은 json
+                    },
+                    success : function(r){
+						r = r.result;
+                        $("#total_result").text("검색된 좌표는 " + r.total +"개 입니다.")
+                         
+                        $.each(r.items, function(idx, data){
+							var points = data.point;
+                            var tag = $("<p>").html("주소 : " + data.address + " x : "+ points.x+", y : "+ points.y)
+							.click(function(){
+								$("input[name=address]").val(data.address);
+								$("input[name=mapx]").val(points.x);
+								$("input[name=mapy]").val(points.y);
+								var s_info = new Array($("input[name=title]").attr("value"), $("input[name=telephone]").attr("value"), data.address);
+								var s_xy = new Array(points.x, points.y);
+                                show_marker(s_info, s_xy);
+                            }).appendTo("#list");
+                        });
+                    }
+                });
+            };
+        });
+    </script>
+	</div>
+	<form>
+		<input type="text" id="search_addr" name="search_addr" class="iText" title="{$lang->search_addr}" value = "" />
+		<input type="button" id="searchBtn" onclick="return find()" value="조회" />
+	</form> 
+	<div id="total_result"></div>
+	<div id="list"></div>
+	<form action="./" method="post" ruleset="write_store">
+		<input type="hidden" name="mid" value="{$mid}" />
+		<input type="hidden" name="act" value="procDosirakstoreWrite" />
+		{@$store_no=NULL;}
+		<block loop="$oDosirakstore => $no, $store">
+		{@$store_no=$store->no;}
+			<input type="hidden" name="no" value="{$store->no}" />
+			<div class="write_body">
+				{$store->no}<br />
+				<span class="title">
+					{$lang->title}: 
+					<input type="text" name="title" class="iText" title="{$lang->title}" value = "{$store->title}"/>
+				</span>
+				<span class="link">
+					{$lang->link}:
+					<input type="text" name="link" class="iText" title="{$lang->link}" value = "{htmlspecialchars($store->link)}"/>
+				</span>
+				<span class="telephone">
+					{$lang->telephone}:
+					<input type="text" name="telephone" class="iText" title="{$lang->telephone}" value = "{$store->telephone}"/>
+				</span>
+				<span class="address">
+					{$lang->address}:
+					<input type="text" name="address" class="iText" title="{$lang->address}" value = "{$store->address}"/>
+				</span>
+				<span class="mapx">
+					{$lang->mapx}:
+					<input type="text" name="mapx" class="iText" title="{$lang->mapx}" value = "{$store->mapx}"/>
+				</span>
+				<span class="mapy">
+					{$lang->mapy}:
+					<input type="text" name="mapy" class="iText" title="{$lang->mapy}" value = "{$store->mapy}"/>
+				</span>
+			</div>
+		</block>
+		<block cond="!$oDosirakstore">
+			<div class="write_body">
+				<span class="title">
+					{$lang->title}: 
+					<input type="text" name="title" class="iText" title="{$lang->title}" value = ""/>
+				</span>
+				<span class="link">
+					{$lang->link}:
+					<input type="text" name="link" class="iText" title="{$lang->link}" value = ""/>
+				</span>
+				<span class="telephone">
+					{$lang->telephone}:
+					<input type="text" name="telephone" class="iText" title="{$lang->telephone}" value = ""/>
+				</span>
+				<span class="address">
+					{$lang->address}:
+					<input type="text" name="address" class="iText" title="{$lang->address}" value = ""/>
+				</span>
+				<span class="mapx">
+					{$lang->mapx}:
+					<input type="text" name="mapx" class="iText" title="{$lang->mapx}" value = ""/>
+				</span>
+				<span class="mapy">
+					{$lang->mapy}:
+					<input type="text" name="mapy" class="iText" title="{$lang->mapy}" value = ""/>
+				</span>
+			</div>
+		</block>
+		<br /> 
+		<button type="submit">{$lang->cmd_registration}</button>
+	</form>
+	<br /> 
+	<div class="buttonbar">
+	<a cond="$store_no" class="btn" href="{getUrl('no', $store_no,'act','')}">{$lang->cmd_back}</a>
+	<a cond="!$store_no" class="btn" href="{getUrl('no', '','act','')}">{$lang->cmd_back}</a>&nbsp;
+	<a class="btn" href="{getUrl('no', '','act','')}">{$lang->cmd_list}</a>
+</div>
+</block>

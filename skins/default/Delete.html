@@ -1,0 +1,17 @@
+<include target="_head.html" />
+
+<div cond="$store" class="context_data">
+	<h3 class="title">{$store->title}</h3>
+		<strong>{$store->address}</strong>
+</div>
+<form action="./" method="get" ruleset="delete_store" class="context_message">
+	<input type="hidden" name="mid" value="{$mid}" />
+	<input type="hidden" name="page" value="{$page}" />
+	<input type="hidden" name="act" value="procDosirakstoreDelete" />
+	<input type="hidden" name="no" value="{$store->no}" />
+	<h1>{$lang->cmd_document_do} {$lang->confirm_delete}</h1>
+	<div class="btnArea">
+		<input type="submit" class="btn" value="{$lang->cmd_delete}" />
+		<button type="button" class="btn" onclick="history.back()">{$lang->cmd_cancel}</button>
+	</div>
+</form>

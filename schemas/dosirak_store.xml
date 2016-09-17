@@ -1,0 +1,9 @@
+<table name="dosirak_store">
+	<column name="no" type="number" size="11" notnull="notnull" primary_key="primary_key" breif="Store Number" />	
+	<column name="title" type="varchar" size="100" notnull="notnull" breif="Store  Name" />
+	<column name="link" type="varchar" size="300" breif="Store Hompage Address" />
+	<column name="telephone" type="varchar" size="50" notnull="notnull" breif="Store Telephone" />	
+	<column name="address" type="varchar" size="250" notnull="notnull" breif="Store Address" />
+	<column name="mapx" type="number" size="11" notnull="notnull" breif="X mapping" />
+	<column name="mapy" type="number" size="11" notnull="notnull" breif="Y mapping" />
+</table>

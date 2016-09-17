@@ -1,0 +1,8 @@
+<query id="deleteDosirakstoreOne" action="delete" priority="LOW">
+    <tables>
+		<table name="dosirak_store" />
+    </tables>
+    <conditions>
+        <condition operation="equal" column="no" var="no" filter="number" notnull="notnull" />
+    </conditions>
+</query>

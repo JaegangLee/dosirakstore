@@ -1,0 +1,295 @@
+<include target="_head.html" />
+<div id="wrapper"> 
+	<script type="text/javascript" src="http://openapi.map.naver.com/openapi/naverMap.naver?ver=2.0&key=NAVER_MAP_API"></script>
+	<div id="map"></div>
+	<script type="text/javascript">
+		//map size 계산하기
+		var mapWidth = window.innerWidth
+		|| document.documentElement.clientWidth
+		|| document.body.clientWidth;
+
+		var mapHeight = window.innerHeight
+		|| document.documentElement.clientHeight
+		|| document.body.clientHeight;
+		
+		var mwidth = Math.round(mapWidth * 0.95);
+		var mheight = Math.round(mapHeight * 0.5);
+
+		var oMarkerParam1 = new Array();
+		var oMarkerParam2 = new Array();
+		var oMarkerParam3 = new Array();
+		var Points = new Array();
+		var Markers = new Array();
+		{@$i=0;}
+		<!--@foreach($store_list as $no => $store)-->
+		Points[{$i}]=new nhn.api.map.TM128({$store->mapx}, {$store->mapy});
+		{@$i++}
+		<!--@end-->
+		var defaultLevel = 11;
+		var oMap = new nhn.api.map.Map(document.getElementById('map'), {
+			boundary : Points,
+			zoom : defaultLevel,
+			enableWheelZoom : true,
+			enableDragPan : true,
+			enableDblClickZoom : false, 
+			mapMode : 0,
+			activateTrafficMap : false, 
+			activateBicycleMap : false,
+			minMaxLevel : [ 1, 14 ],
+			size : new nhn.api.map.Size(mwidth, mheight)
+		});
+		//줌 슬라이더 조작계
+		var oSlider = new nhn.api.map.ZoomControl();
+		oMap.addControl(oSlider);
+		oSlider.setPosition({
+			top : 10,
+			left : 10
+		});
+
+		var oSize = new nhn.api.map.Size(28, 37);
+		var oOffset = new nhn.api.map.Size(14, 37);
+		var oIconOn = new nhn.api.map.Icon('http://static.naver.com/maps2/icons/pin_spot2.png', oSize, oOffset);
+		
+			 var infoWindow = new nhn.api.map.InfoWindow(); // - info window 생성
+			infoWindow.setPosition({
+					top : 20,
+					left :20
+				});
+		 //마커 추가
+		 {@$j=0;} 
+		<!--@foreach($store_list as $no => $store)-->
+			 
+			 var oPoint = new nhn.api.map.TM128({$store->mapx} , {$store->mapy});
+			 Markers[{$j}] = new nhn.api.map.Marker(oIconOn, {
+				title : '{$store->title}',
+				  zIndex : {$no}
+			 });
+			 var oMarker = Markers[{$j}];
+			 //변수전달 방법, 배열사용
+			 oMarkerParam1[{$no}] = "{$store->title}";
+			 oMarkerParam2[{$no}] = '{$store->telephone}';
+			 oMarkerParam3[{$no}] = '{$store->address}';
+			 oMarker.setPoint(oPoint);
+			 oMap.addOverlay(oMarker);
+			 //첫 마커의 설명창만 보이게 설정 
+			<!--@if($j==0)-->
+				 infoWindow.setContent('<DIV style="border-top:1px solid; border-bottom:2px groove black; border-left:1px solid; border-right:2px groove black;margin-bottom:1px;color:black;background-color:white; width:auto; height:auto;">'
+					+'<span style="color: #000000 !important;display: inline-block;font-size: 12px !important;font-weight: bold !important;letter-spacing: -1px !important;white-space: nowrap !important; padding: 2px 5px 2px 2px !important">' 
+					+oMarkerParam1[{$no}]
+					+'<br /> ' 
+					+ oMarkerParam2[{$no}]
+					+'<br /> ' 
+					+ oMarkerParam3[{$no}]
+					+'<span></div>');
+				 infoWindow.setPoint(oMarker.getPoint());
+				 infoWindow.setVisible(true);
+				 infoWindow.setPosition({right : 5, top : 20}); 
+				 infoWindow.autoPosition();
+			 <!--@end-->  
+				 {@$j++;}
+
+		<!--@end--> 
+			//깃발에 마우스 올리면 설명 나오게 하는 부분
+		 var oLabel = new nhn.api.map.MarkerLabel(); // - 마커 라벨 선언.
+		 oMap.addOverlay(oLabel); // - 마커 라벨 지도에 추가. 기본은 라벨이 보이지 않는 상태로 추가됨.
+		 oMap.addOverlay(infoWindow); // - 마커 라벨 지도에 추가. 기본은 라벨이 보이지 않는 상태로 추가됨.
+		oMap.attach('mouseenter', function(oCustomEvent) {
+
+			var oTarget = oCustomEvent.target;
+			// 마커위에 마우스 올라간거면
+			if (oTarget instanceof nhn.api.map.Marker) {
+				var oMarker = oTarget;
+				oLabel.setVisible(true, oMarker); // - 특정 마커를 지정하여 해당 마커의 title을 보여준다.
+			}
+		});
+
+		oMap.attach('mouseleave', function(oCustomEvent) {
+
+			var oTarget = oCustomEvent.target;
+			// 마커위에서 마우스 나간거면
+			if (oTarget instanceof nhn.api.map.Marker) {
+				oLabel.setVisible(false);
+			}
+		});
+		
+		 oMap.attach('click', function(oCustomEvent) {
+			  var oTarget = oCustomEvent.target;
+				infoWindow.setVisible(false);
+
+			  // 마커 클릭하면
+			  if (oTarget instanceof nhn.api.map.Marker) {
+					 var oMarkerId = oCustomEvent.target.getZIndex();
+					 oLabel.setVisible(false);
+				   oTarget.setIcon(oIconOn);
+					//oMap.setCenter(oMarker.getPoint());
+					infoWindow.setContent('<DIV style="border-top:1px solid; border-bottom:2px groove black; border-left:1px solid; border-right:2px groove black;margin-bottom:1px;color:black;background-color:white; width:auto; height:auto;">'
+					+'<span style="color: #000000 !important;display: inline-block;font-size: 12px !important;font-weight: bold !important;letter-spacing: -1px !important;white-space: nowrap !important; padding: 2px 5px 2px 2px !important">' 
+					+oMarkerParam1[oMarkerId]
+					+'<br /> ' 
+					+ oMarkerParam2[oMarkerId]
+					+'<br /> ' 
+					+ oMarkerParam3[oMarkerId]
+					+'<span></div>'
+					);
+					infoWindow.setPoint(oTarget.getPoint());
+					infoWindow.setPosition({right : 5, top : 20});
+					infoWindow.setVisible(true);
+
+				 //  infoWindow.autoPosition();
+				   return;
+			  }
+		 });
+
+		window.onresize=function(){
+			var mapRWidth = window.innerWidth
+			|| document.documentElement.clientWidth
+			|| document.body.clientWidth;
+
+			var mapRHeight = window.innerHeight
+			|| document.documentElement.clientHeight
+			|| document.body.clientHeight;
+			
+			var rwidth = Math.round(mapRWidth * 0.95);
+			var rheight = Math.round(mapRHeight * 0.5);
+			
+			oMap.setSize(new nhn.api.map.Size(rwidth, rheight));
+		};
+		
+		function showInfo(no)
+		{
+			var i=0;
+			var targetMarker;
+			infoWindow.setVisible(false);
+			for(i=0;i<Markers.length;i++){
+				zIndex=Markers[i].getZIndex();
+				if(zIndex==no)
+				{
+					targetMarker=Markers[i];
+				}
+			}
+			
+			 oLabel.setVisible(false);
+			   targetMarker.setIcon(oIconOn);
+				oMap.setCenter(targetMarker.getPoint());
+				infoWindow.setContent('<DIV style="border-top:1px solid; border-bottom:2px groove black; border-left:1px solid; border-right:2px groove black;margin-bottom:1px;color:black;background-color:white; width:auto; height:auto;">'
+				+'<span style="color: #000000 !important;display: inline-block;font-size: 12px !important;font-weight: bold !important;letter-spacing: -1px !important;white-space: nowrap !important; padding: 2px 5px 2px 2px !important">' 
+				+oMarkerParam1[no]
+				+'<br /> ' 
+				+ oMarkerParam2[no]
+				+'<br /> ' 
+				+ oMarkerParam3[no]
+				+'<span></div>'
+				);
+				infoWindow.setPoint(targetMarker.getPoint());
+				infoWindow.setPosition({right : 5, top : 20});
+				infoWindow.setVisible(true);
+
+			 //  infoWindow.autoPosition();
+			 this.className += " selected";
+			   return;
+		  
+		}
+		 /*
+		var trs = document.querySelectorAll("tr.row");
+		 
+		for(var i = 0; i < trs.length; i++){
+			trs[i].addEventListener("click", function(){this.className += " selected";});
+		}​
+		*/
+	</script>
+	<script language="javascript">
+		function gourl2()
+		{
+			tform = document.search_form2;
+			if(tform.city.value=='')
+			{
+				document.getElementById('local2').value = tform.title.value;
+			}
+			else
+			{
+				document.getElementById('local2').value = tform.title.value + " " + tform.city.value;
+			}
+			tform.submit();
+		}
+	</script>
+	{@
+		if(!isset($xmlsw))
+			$xml_address = simplexml_load_file("./address.xml");
+		$xmlsw=1;
+	}
+	<script>
+	 function chgsel2(){
+	  tform = document.search_form2;
+		<!--@foreach($xml_address->entity as $no => $row)-->
+		i=2;
+		if(tform.title.value == '{$row->title}'){
+			tform.city.length = {count($row->select->var)}+2;
+			tform.city.options[0].text = '시/군/구';
+			tform.city.options[0].value = '';
+			tform.city.options[1].text = '전체';
+			tform.city.options[1].value = '';
+			<!--@foreach($row->select->var as $col)-->
+			tform.city.options[i].text = '{$col}';
+			tform.city.options[i].value = '{$col}';
+			i++;
+			<!--@end-->
+		}
+		<!--@end-->
+	 }
+	</script>
+	<!--js file 포함하기.-->
+	<form name="search_form2" action="./" method="post" ruleset="search_store" >
+		<select name="title" onchange="chgsel2()" >
+			<option class="row1" value=" " >시/도</option>
+		<!--@foreach($xml_address->entity as $row)-->
+			<option class="row1" value="{$row->title}" >{$row->title}</option>
+		<!--@end-->
+		</select>
+		<select name="city" onchange="gourl2()">
+			<option class="row2" value=" " >시/군/구</option>
+		</select>
+		<input type="hidden" name="mid" value="{$mid}" />
+		<input type="hidden" name="local" id="local2" value="" />
+		<input type="hidden" name="act" value="procSearchStore" />
+	</form> 
+	<div id="total_count">
+		총 {number_format($total_count)} 개의 업체가 검색되었습니다.
+	</div>
+	<div class="dosirakList" id="dosirakList">
+		<table width="100%" border="1" cellspacing="0"> 
+			<thead>
+				<tr>
+					<th class="no">{$lang->no}</th>
+					<th class="title">업체명</th>
+					<th class="address">주소</th>
+					<th class="telephone">전화</th>
+					<th cond="$grant->manager"> 관리</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="row" loop="$store_list => $no, $store" onClick="showInfo({$no})"> 
+					<td class="no">{$no}</td>
+					<td class="title">{$store->title}</td>
+					<td class="address">{$store->address}</td>
+					<td class="telephone">
+						<a href="tel:{$store->telephone}" alt="{$store->telephone}" title="{$store->telephone}"><img src="css/icon_phones.gif"> {$store->telephone} </a> 
+					</td>
+					<td cond="$grant->manager"> <a href="{getUrl('no', $store->no)}">조회</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="listFooter">
+		<div class="pagenavi" cond="$total_count > 0">
+			<a href="{getUrl('page', '')}" class="direction first_page">{$lang->first_page}</a>
+			<block loop="$page_no = $page_navigation->getNextPage()">
+				<strong cond="$page == $page_no">{$page_no}</strong>
+				<a cond="$page != $page_no" href="{getUrl('page', $page_no)}">{$page_no}</a>
+			</block>
+			<a href="{getUrl('page', $page_navigation->last_page)}" class="direction last_page">{$lang->last_page}</a>
+		</div>
+		<div class="buttonbar" cond="$grant->manager">
+			<a cond="$grant->manager" class="btn" href="{getUrl('act','dispDosirakstoreWrite')}">{$lang->cmd_write}</a>&nbsp;
+		</div>
+	</div>
+</div>
